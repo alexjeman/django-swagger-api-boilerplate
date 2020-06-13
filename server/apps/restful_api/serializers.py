@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from api_app.models import Category, Blog, Comment
+from apps.restful_api.models import Category, Blog, Comment
 
 
 class CategorySerializer(serializers.ModelSerializer):

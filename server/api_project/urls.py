@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from app_helper.helpers import schema_view
+from apps.common.helpers import schema_view
 
 urlpatterns = [
     path("", schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
-    path('common/', include("app_helper.urls")),
-    path('blog/', include("api_app.urls")),
-    path('users/', include("users.urls")),
+    path('common/', include("apps.common.urls")),
+    path('blog/', include("apps.restful_api.urls")),
+    path('users/', include("apps.users.urls")),
 ]

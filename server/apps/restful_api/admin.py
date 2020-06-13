@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api_app.models import Blog, Category, Comment
+from apps.restful_api.models import Blog, Category, Comment
 
 admin.site.register(Blog)
 admin.site.register(Category)

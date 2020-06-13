@@ -5,8 +5,8 @@ from rest_framework.permissions import AllowAny
 from drf_util.decorators import serialize_decorator
 
 
-from api_app.models import Category, Blog, Comment
-from api_app.serializers import (CategorySerializer,
+from apps.restful_api.models import Category, Blog, Comment
+from apps.restful_api.serializers import (CategorySerializer,
                                    BlogSerializer,
                                    CommentSerializer)
 

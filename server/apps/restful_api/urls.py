@@ -1,6 +1,6 @@
 from django.urls import path
 
-from api_app.views import (CategoryViewSet,
+from apps.restful_api.views import (CategoryViewSet,
                              BlogListView,
                              BlogItemView,
                              CommentListView)

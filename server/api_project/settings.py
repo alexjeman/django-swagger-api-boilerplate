@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_nose',
     'django_extensions',
-    'app_helper',
-    'api_app',
-    'users',
+    'apps.common',
+    'apps.restful_api',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -108,7 +108,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
-    'EXCEPTION_HANDLER': 'app_helper.exceptions.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler'
 }
 
 SWAGGER_SETTINGS = {
@@ -185,7 +185,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=' + ','.join([app + '.views' for app in INSTALLED_APPS if app.startswith('.')]),
+    '--cover-package=' + ','.join([app + '.views' for app in INSTALLED_APPS if app.startswith('apps.')]),
 ]
 
 
