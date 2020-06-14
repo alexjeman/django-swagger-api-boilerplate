@@ -28,7 +28,10 @@ schema_view = get_schema_view(
 )
 
 
-def send_html_message(emails: List, title: str, template_path: str, context: Dict) -> None:
+def send_html_message(emails: List,
+                      title: str,
+                      template_path: str,
+                      context: Dict) -> None:
     """
     Send email by text template
     :param title: title message
@@ -37,7 +40,7 @@ def send_html_message(emails: List, title: str, template_path: str, context: Dic
     :param context: some context for template
     :return: boolean value
     Example : send_html_message(
-                                ["contact@alexjeman.com", ],
+                                ["test@gmail.com", ],
                                 "Title test",
                                 "emails/template_message.html",
                                 {"test_text": "test test test"}

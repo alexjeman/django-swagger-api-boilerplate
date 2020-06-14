@@ -7,8 +7,8 @@ from drf_util.decorators import serialize_decorator
 
 from apps.restful_api.models import Category, Blog, Comment
 from apps.restful_api.serializers import (CategorySerializer,
-                                   BlogSerializer,
-                                   CommentSerializer)
+                                          BlogSerializer,
+                                          CommentSerializer)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -47,7 +47,6 @@ class BlogItemView(GenericAPIView):
     queryset = ''
     permission_classes = (AllowAny,)
     authentication_classes = ()
-
 
     def get(self, request, pk):
         comments = Blog.objects.get(id=pk).commentitem.all().values()

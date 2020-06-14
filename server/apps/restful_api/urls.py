@@ -1,9 +1,9 @@
 from django.urls import path
 
 from apps.restful_api.views import (CategoryViewSet,
-                             BlogListView,
-                             BlogItemView,
-                             CommentListView)
+                                    BlogListView,
+                                    BlogItemView,
+                                    CommentListView)
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()

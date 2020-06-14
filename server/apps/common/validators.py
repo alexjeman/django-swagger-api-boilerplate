@@ -25,7 +25,8 @@ class ObjectValidator(object):
 
 
 class ObjectIdSerializer(serializers.Serializer):
-    object_id = serializers.CharField(min_length=24, max_length=24, required=True)
+    object_id = serializers.CharField(
+        min_length=24, max_length=24, required=True)
 
 
 class ObjectIdValidator(object):
@@ -35,6 +36,7 @@ class ObjectIdValidator(object):
             'object_id': value
         })
         if not serializer.is_valid():
-            raise serializers.ValidationError(serializer.errors.get('object_id'))
+            raise serializers.ValidationError(
+                serializer.errors.get('object_id'))
 
         return value
