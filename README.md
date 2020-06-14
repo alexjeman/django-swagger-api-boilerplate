@@ -1,35 +1,53 @@
-# Notes for creating Django RESTful API with Swagger Boilerplate and extended Users + JWT token authentication (fresh django install)
+# Notes for creating Django RESTful API with Swagger and extended Users + JWT token authentication Boilerplate (fresh django install)
 
 # create environment
+```
 python3 -m venv py38
+```
 
 # activate environment
+```
 source py38/bin/activate
+```
 
 # install dependencies from requirements.txt
+```
 pip install -r requirements.txt
+```
 
 # creating a new project
+```
 django-admin startproject api_project
 mv api_project server
+```
 
 # create postgres docker container
+```
 docker run --name postgres_server -p 5432:5432  -e POSTGRES_PASSWORD=password123 postgres
+```
 
 # list local docker containers
+```
 docker container ls --all
+```
 
 # bash into the container to run postgres
+```
 docker start [container id]
 docker exec -it [container id] bash
 psql -U postgres
 CREATE DATABASE my_postgres_db;
+```
 
 # SQL setup in django settings.py
+```
 cd server
+```
 
 # Add db connection and settings settings for the installed packages
-""" settings.py
+``` 
+""" api_project/settings.py """
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -40,26 +58,32 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+```
 
 # migrate schema and create django admin user
+```
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
+```
 
 # create app
+```
 cd api_project
 mkdir apps
 cd apps
 django-admin startapp users
 django-admin startapp common
 django-admin startapp restful_api
-
+```
 
 # write app models, serializers, views, endpoints
 
 ## apps/restful_api model, serializer, endpoint
 
-""" apps/restful_api/models.py
+``` 
+""" apps/restful_api/models.py """
+
 from django.db import models
 
 
@@ -94,10 +118,11 @@ class Comment(models.Model):
     def __str__(self):
         return '{}...'.format(self.text[:50])
 
-"""
+```
 
-""" apps/restful_api/admin.py
-...
+``` 
+""" apps/restful_api/admin.py """
+
 from django.contrib import admin
 from apps.restful_api.models import Blog, Category, Comment
 
@@ -105,9 +130,11 @@ admin.site.register(Blog)
 admin.site.register(Category)
 admin.site.register(Comment)
 
-"""
+```
 
-""" apps/restful_api/serializers.py
+``` 
+""" apps/restful_api/serializers.py """
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -131,9 +158,11 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
 
-"""
+```
 
-""" apps/restful_api/views.py
+``` 
+""" apps/restful_api/views.py """
+
 from rest_framework import viewsets
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
@@ -210,9 +239,11 @@ class CommentListView(GenericAPIView):
 
         return Response(CommentSerializer(comment).data)
 
-"""
+```
 
-""" apps/restful_api/urls.py
+``` 
+""" apps/restful_api/urls.py """
+
 from django.urls import path
 
 from apps.restful_api.views import (CategoryViewSet,
@@ -232,16 +263,20 @@ urlpatterns += [
     path('blog/<int:pk>/', BlogItemView.as_view(), name='blog_item'),
 ]
 
-"""
+```
 
 ## apps/users model, serializer, views, endpoint
 
-""" apps/users/model.py
+``` 
+""" apps/users/model.py """
+
 from django.db import models
 
-"""
+```
 
-""" apps/users/serializers.py
+``` 
+""" apps/users/serializers.py """
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -253,9 +288,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("first_name", "last_name", "username", "password",)
 
-"""
+```
 
-""" apps/users/serializers.py
+``` 
+""" apps/users/serializers.py """
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -267,9 +304,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("first_name", "last_name", "username", "password",)
 
-"""
+```
 
-""" apps/users/views.py
+``` 
+""" apps/users/views.py """
+
 from django.contrib.auth.models import User
 from drf_util.decorators import serialize_decorator
 from rest_framework.generics import GenericAPIView
@@ -301,9 +340,11 @@ class RegisterUserView(GenericAPIView):
 
         return Response(UserSerializer(user).data)
 
-"""
+```
 
-""" apps/users/urls.py
+``` 
+""" apps/users/urls.py """
+
 from django.urls import path
 
 from rest_framework_simplejwt.views import (
@@ -319,12 +360,15 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
-"""
+```
 
 ## apps/common exceptions, helpers...
-
+```
 mkdir apps/common/fixtures
-""" apps/common/fixtures/initial_data.json
+```
+``` 
+""" apps/common/fixtures/initial_data.json """
+
 [
   {
     "model": "auth.user",
@@ -340,9 +384,11 @@ mkdir apps/common/fixtures
   }
 ]
 
-"""
+```
 
-""" apps/common/exceptions.py
+``` 
+""" apps/common/exceptions.py """
+
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -357,9 +403,11 @@ def custom_exception_handler(exc, context):
 
     return response
 
-"""
+```
 
-""" apps/common/helpers.py
+``` 
+""" apps/common/helpers.py """
+
 from collections import OrderedDict
 
 from drf_yasg import openapi
@@ -458,9 +506,11 @@ def elastic_text_search(field: str, value: str):
         }
     }
 
-"""
+```
 
-""" apps/common/middlewares.py
+``` 
+""" apps/common/middlewares.py """
+
 from django.utils.translation import gettext as _
 from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
@@ -485,9 +535,11 @@ class ApiMiddleware(MiddlewareMixin):
             'detail': _('Something Went Wrong. Please contact support')
         }, status=500)
 
-"""
+```
 
-""" apps/common/permissions.py
+``` 
+""" apps/common/permissions.py """
+
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
@@ -495,9 +547,11 @@ class ReadOnly(BasePermission):
     def has_permission(self, request, view):
         return bool(request.method in SAFE_METHODS) and bool(request.user and request.user.is_authenticated)
 
-"""
+```
 
-""" apps/common/testings.py
+``` 
+""" apps/common/testings.py """
+
 from django.test.runner import DiscoverRunner
 
 
@@ -510,9 +564,11 @@ class NoDbTestRunner(DiscoverRunner):
     def teardown_databases(self, old_config, **kwargs):
         pass
 
-"""
+```
 
-""" apps/common/tests.py
+``` 
+""" apps/common/tests.py """
+
 from django.test import TestCase
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
@@ -537,9 +593,11 @@ class TestCommon(TestCase):
         response = self.client.get(reverse('protected_view'), )
         self.assertEqual(response.status_code, 200)
 
-"""
+```
 
-""" apps/common/urls.py
+``` 
+""" apps/common/urls.py """
+
 from django.urls import path
 
 from apps.common.views import HealthView, ProtectedTestView
@@ -549,9 +607,11 @@ urlpatterns = [
     path("protected", ProtectedTestView.as_view(), name='protected_view'),
 ]
 
-"""
+```
 
-""" apps/common/validators.py
+``` 
+""" apps/common/validators.py """
+
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -595,9 +655,11 @@ class ObjectIdValidator(object):
 
         return value
 
-"""
+```
 
-""" apps/common/views.py
+``` 
+""" apps/common/views.py """
+
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -622,12 +684,14 @@ class ProtectedTestView(APIView):
             'live': True,
         })
 
-"""
+```
 
 
 # api_project URLS
 
-""" api_project/urls.py
+``` 
+""" api_project/urls.py """
+
 """api_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -657,10 +721,12 @@ urlpatterns = [
     path('users/', include("apps.users.urls")),
 ]
 
-"""
+```
 
 # api_project Settings
-""" ADDED to api_project/settings.py
+``` 
+""" ADDED to api_project/settings.py """
+
 WSGI_AUTO_RELOAD = True
 
 DEBUG_LEVEL = "INFO"
@@ -745,4 +811,4 @@ NOSE_ARGS = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
-"""
+```
