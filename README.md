@@ -67,7 +67,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-# create app
+# create apps
 ```
 cd api_project
 mkdir apps
@@ -805,7 +805,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=' + ','.join([app + '.views' for app in INSTALLED_APPS if app.startswith('.')]),
+    '--cover-package=' + ','.join([app + '.views' for app in INSTALLED_APPS if app.startswith('apps.')]),
 ]
 
 
