@@ -13,7 +13,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = '__all__'
+        fields = ("title", "slug", "body", "category", "enabled",)
 
 
 class CommentSerializer(serializers.ModelSerializer):

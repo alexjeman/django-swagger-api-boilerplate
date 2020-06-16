@@ -5,7 +5,9 @@ from rest_framework.permissions import AllowAny
 from drf_util.decorators import serialize_decorator
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.throttling import AnonRateThrottle
-
+from rest_framework_simplejwt import authentication
+from rest_framework_simplejwt.models import TokenUser
+from django.contrib.auth.models import User
 
 from apps.restful_api.models import Category, Blog, Comment
 from apps.restful_api.serializers import (CategorySerializer,
@@ -32,9 +34,12 @@ class BlogListView(GenericAPIView):
 
     @serialize_decorator(BlogSerializer)
     def post(self, request):
+        user_token = authentication.JWTAuthentication().authenticate(request)[1]
+        author = User.objects.get(id=TokenUser(user_token).id)
         validated_data = request.serializer.validated_data
 
         blog = Blog.objects.create(
+            author=author,
             title=validated_data['title'],
             slug=validated_data['slug'],
             body=validated_data['body'],
