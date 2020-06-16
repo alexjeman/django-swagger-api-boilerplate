@@ -44,7 +44,7 @@ CREATE DATABASE my_postgres_db;
 cd server
 ```
 
-# Add db connection and settings settings for the installed packages
+# Add db connection and settings for the installed packages
 ``` 
 """ api_project/settings.py """
 
