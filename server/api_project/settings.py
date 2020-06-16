@@ -29,12 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 WSGI_AUTO_RELOAD = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-DEBUG_LEVEL = "INFO"
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -65,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.common.middlewares.ApiMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'api_project.urls'
@@ -141,24 +138,24 @@ FIXTURE_DIRS = (
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres_db1',
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
+# PostgreSQL
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres_db1',
+#         'USER': DB_USER,
+#         'PASSWORD': DB_PASSWORD,
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -212,5 +209,43 @@ NOSE_ARGS = [
     '--cover-package=' + ','.join([app + '.views' for app in INSTALLED_APPS if app.startswith('apps.')]),
 ]
 
-
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+DEBUG_LEVEL = "INFO"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s]- %(message)s'}
+
+    },
+    'handlers': {
+        'console': {
+            'level': DEBUG_LEVEL,
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+        }
+    },
+    'loggers': {
+        'info': {
+            'handlers': ["console"],
+            'level': DEBUG_LEVEL,
+            'propagate': True
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': DEBUG_LEVEL,
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': DEBUG_LEVEL,
+            'propagate': True,
+        }
+    },
+}
