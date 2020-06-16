@@ -1,11 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
 from drf_util.decorators import serialize_decorator
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.throttling import AnonRateThrottle
-from rest_framework_simplejwt import authentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 from apps.restful_api.models import Category, Blog, Comment
@@ -22,8 +22,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class BlogListView(GenericAPIView):
     serializer_class = BlogSerializer
 
-    permission_classes = (AllowAny,)
-    authentication_classes = ()
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
     throttle_classes = (UserRateThrottle, AnonRateThrottle, )
 
@@ -33,7 +33,7 @@ class BlogListView(GenericAPIView):
 
     @serialize_decorator(BlogSerializer)
     def post(self, request):
-        author = authentication.JWTAuthentication().authenticate(request)[0]
+        author = JWTAuthentication().authenticate(request)[0]
         validated_data = request.serializer.validated_data
 
         blog = Blog.objects.create(
@@ -52,8 +52,8 @@ class BlogListView(GenericAPIView):
 class BlogItemView(GenericAPIView):
     queryset = ''
     serializer_class = BlogSerializer
-    permission_classes = (AllowAny,)
-    authentication_classes = ()
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
     throttle_classes = (UserRateThrottle, AnonRateThrottle, )
 
@@ -68,12 +68,12 @@ class BlogItemView(GenericAPIView):
 class CommentListView(GenericAPIView):
     serializer_class = CommentSerializer
 
-    permission_classes = (AllowAny,)
-    authentication_classes = ()
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    authentication_classes = (JWTAuthentication,)
 
     @serialize_decorator(CommentSerializer)
     def post(self, request):
-        author = authentication.JWTAuthentication().authenticate(request)[0]
+        author = JWTAuthentication().authenticate(request)[0]
         validated_data = request.serializer.validated_data
 
         comment = Comment.objects.create(
