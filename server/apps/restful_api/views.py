@@ -3,6 +3,8 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from drf_util.decorators import serialize_decorator
+from rest_framework.throttling import UserRateThrottle
+from rest_framework.throttling import AnonRateThrottle
 
 
 from apps.restful_api.models import Category, Blog, Comment
@@ -12,8 +14,8 @@ from apps.restful_api.serializers import (CategorySerializer,
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 
 class BlogListView(GenericAPIView):
@@ -21,6 +23,8 @@ class BlogListView(GenericAPIView):
 
     permission_classes = (AllowAny,)
     authentication_classes = ()
+
+    throttle_classes = (UserRateThrottle, AnonRateThrottle, )
 
     def get(self, request):
         blogs = Blog.objects.all()
@@ -43,10 +47,12 @@ class BlogListView(GenericAPIView):
 
 
 class BlogItemView(GenericAPIView):
-    serializer_class = BlogSerializer
     queryset = ''
+    serializer_class = BlogSerializer
     permission_classes = (AllowAny,)
     authentication_classes = ()
+
+    throttle_classes = (UserRateThrottle, AnonRateThrottle, )
 
     def get(self, request, pk):
         comments = Blog.objects.get(id=pk).commentitem.all().values()
