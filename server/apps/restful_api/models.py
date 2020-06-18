@@ -12,7 +12,7 @@ class Category(models.Model):
 
 class Blog(models.Model):
     author = models.ForeignKey(
-        User, related_name='blogitem', default=User, on_delete=models.CASCADE
+        User, related_name='blogitem', on_delete=models.CASCADE
     )
     title = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
